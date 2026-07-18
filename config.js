@@ -70,11 +70,12 @@ const TTN_CONFIG = {
     {
       id: "eurusd",
       label: "EUR/USD",
-      symbol: "EUR/USD",
+      symbol: "FX",
       type: "forex",
       // Frankfurter — безкоштовний, без ключа, з CORS
       frankfurterPair: { from: "EUR", to: "USD" },
       tvSymbol: "FX:EURUSD",
+      demoBase: 1.16,
     },
   ],
 

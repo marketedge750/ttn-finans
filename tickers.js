@@ -78,23 +78,30 @@ const TTNTickers = (() => {
   async function fetchForex() {
     const fx = TTN_CONFIG.TICKERS.find((t) => t.type === "forex");
     if (!fx) return;
+    let rate = null;
+    let changePct = 0;
     try {
       const res = await fetch(
         `https://api.frankfurter.app/latest?from=${fx.frankfurterPair.from}&to=${fx.frankfurterPair.to}`
       );
       const data = await res.json();
-      const rate = data.rates[fx.frankfurterPair.to];
-      // approximate daily change using previous business day
+      rate = data.rates[fx.frankfurterPair.to];
+    } catch (e) {
+      applyUpdate(fx.id, ...demoValue(fx), true);
+      return;
+    }
+    // Change % is best-effort — if it fails, still show the real current rate
+    try {
       const prevRes = await fetch(
         `https://api.frankfurter.app/${shiftDate(-3)}?from=${fx.frankfurterPair.from}&to=${fx.frankfurterPair.to}`
       );
       const prevData = await prevRes.json();
       const prevRate = Object.values(prevData.rates)[0] ?? rate;
-      const changePct = ((rate - prevRate) / prevRate) * 100;
-      applyUpdate(fx.id, rate, changePct, false);
+      changePct = ((rate - prevRate) / prevRate) * 100;
     } catch (e) {
-      applyUpdate(fx.id, ...demoValue(fx), true);
+      changePct = 0;
     }
+    applyUpdate(fx.id, rate, changePct, false);
   }
 
   function shiftDate(days) {
