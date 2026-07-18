@@ -39,11 +39,13 @@ img { max-width: 100%; display: block; }
    Top nav
    ========================================================= */
 .topnav {
-  height: var(--header-h);
+  min-height: var(--header-h);
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  padding: 0 20px;
+  gap: 10px;
+  padding: 10px 20px;
   border-bottom: 1px solid var(--border);
   background: var(--surface);
   position: sticky;
@@ -59,6 +61,8 @@ img { max-width: 100%; display: block; }
   font-weight: 700;
   font-size: 20px;
   letter-spacing: 0.5px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .brand .dot { color: var(--accent); }
@@ -69,6 +73,7 @@ img { max-width: 100%; display: block; }
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 1px;
+  white-space: nowrap;
 }
 
 .nav-links { display: flex; gap: 24px; font-size: 14px; color: var(--text-dim); }
@@ -103,9 +108,7 @@ img { max-width: 100%; display: block; }
   grid-template-columns: repeat(6, 1fr);
   background: var(--surface);
   border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: var(--header-h);
-  z-index: 40;
+  min-height: 62px;
 }
 
 .ticker-cell {
@@ -408,5 +411,6 @@ footer a:hover { color: var(--accent); }
 
 @media (max-width: 520px) {
   .ticker-strip { grid-template-columns: repeat(2, 1fr); }
-  .search-box { min-width: 0; }
+  .search-box { min-width: 0; flex: 1 1 100%; order: 3; }
+  .brand small { display: none; }
 }
