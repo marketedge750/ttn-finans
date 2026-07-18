@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Про нас — TTN</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="topnav">
+  <div class="brand"><span class="dot">●</span> TTN <small>market watch</small></div>
+  <nav class="nav-links">
+    <a href="index.html">Головна</a>
+    <a href="about.html">Про нас</a>
+    <a href="privacy.html">Конфіденційність</a>
+  </nav>
+  <div></div>
+</header>
+
+<div class="static-page">
+  <h1>Про TTN</h1>
+  <p>
+    TTN — це експериментальний фінансовий інформаційний майданчик, який
+    у реальному часі відстежує ключові ринкові індикатори (Bitcoin,
+    Ethereum, S&P 500, Nasdaq, золото, EUR/USD) та агрегує актуальні
+    фінансові новини з відкритих джерел.
+  </p>
+
+  <h2>Що ми робимо</h2>
+  <ul>
+    <li>Показуємо live-котирування шести головних ринкових індикаторів.</li>
+    <li>Агрегуємо новини з перевірених фінансових джерел із посиланням на оригінал.</li>
+    <li>Автоматично визначаємо тікери, згадані в новинах, і даємо змогу одразу відкрити графік.</li>
+    <li>Надаємо інтерактивні графіки на базі TradingView для кожного активу.</li>
+  </ul>
+
+  <h2>Чого ми не робимо</h2>
+  <p>
+    Ми не переписуємо чужі статті та не видаємо їх за власний контент —
+    кожна новина супроводжується посиланням на першоджерело.
+  </p>
+
+  <h2>Застереження</h2>
+  <p>
+    Матеріали на сайті TTN мають виключно інформаційний характер і не є
+    інвестиційною, фінансовою чи юридичною порадою. Перед прийняттям
+    будь-яких фінансових рішень рекомендуємо звернутися до
+    кваліфікованого спеціаліста.
+  </p>
+</div>
+
+<footer>
+  <p>© <span id="year"></span> TTN. Дані надаються "як є" і не є інвестиційною порадою.</p>
+  <div>
+    <a href="about.html">Про нас</a> ·
+    <a href="privacy.html">Політика конфіденційності</a>
+  </div>
+</footer>
+<script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+</body>
+</html>
