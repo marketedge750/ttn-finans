@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brokers &amp; Exchanges — TTN</title>
+<meta name="description" content="A curated overview of forex brokers and crypto exchanges.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topnav">
+  <div class="brand"><span class="dot">●</span> TTN <small>market watch</small></div>
+  <nav class="nav-links" id="nav-links">
+    <a href="index.html">Home</a>
+    <a href="calculators.html">Calculators</a>
+    <a href="brokers.html">Brokers</a>
+    <a href="about.html">About</a>
+    <a href="privacy.html">Privacy</a>
+  </nav>
+  <button class="nav-toggle" id="nav-toggle" aria-label="Menu">☰</button>
+</header>
+<script>
+  document.getElementById("nav-toggle").addEventListener("click", () => {
+    document.getElementById("nav-links").classList.toggle("open");
+  });
+</script>
+
+<div class="static-page" style="max-width:900px;">
+  <h1>Brokers &amp; Exchanges</h1>
+  <p style="color:var(--text-dim);font-size:14px;">
+    A curated selection of platforms for trading forex, stocks, and crypto.
+  </p>
+
+  <div class="disclosure-note">
+    ⚠️ Some links on this page are affiliate links — TTN may earn a
+    commission if you open an account through them, at no extra cost to
+    you. This is not investment advice — always verify a broker's
+    licensing and terms independently before signing up.
+  </div>
+
+  <div class="broker-section-title">Forex / CFD Brokers</div>
+  <div class="broker-list">
+
+    <div class="broker-card">
+      <div class="broker-info">
+        <h3>Interactive Brokers <span class="broker-tag">Stocks · Forex</span></h3>
+        <p>One of the world's largest brokers, with access to exchanges across the US, Europe, and Asia, and low fees for active traders.</p>
+        <div class="broker-meta"><span>Regulation: SEC, FCA, CBI</span><span>Min. deposit: $0</span></div>
+      </div>
+      <a href="#" class="broker-cta" target="_blank" rel="noopener sponsored">Open Account →</a>
+    </div>
+
+    <div class="broker-card">
+      <div class="broker-info">
+        <h3>eToro <span class="broker-tag">Social Trading</span></h3>
+        <p>A platform with copy-trading features that let you mirror experienced traders, popular with beginners across stocks, forex, and crypto.</p>
+        <div class="broker-meta"><span>Regulation: FCA, CySEC, ASIC</span><span>Min. deposit: $50</span></div>
+      </div>
+      <a href="#" class="broker-cta" target="_blank" rel="noopener sponsored">Open Account →</a>
+    </div>
+
+    <div class="broker-card">
+      <div class="broker-info">
+        <h3>Exness <span class="broker-tag">Forex · CFD</span></h3>
+        <p>A widely used forex broker offering high leverage and fast withdrawals.</p>
+        <div class="broker-meta"><span>Regulation: FCA, CySEC, FSCA</span><span>Min. deposit: $10</span></div>
+      </div>
+      <a href="#" class="broker-cta" target="_blank" rel="noopener sponsored">Open Account →</a>
+    </div>
+
+  </div>
+
+  <div class="broker-section-title">Crypto Exchanges</div>
+  <div class="broker-list">
+
+    <div class="broker-card">
+      <div class="broker-info">
+        <h3>Binance <span class="broker-tag">Crypto</span></h3>
+        <p>The world's largest crypto exchange by trading volume, offering a huge range of coins, futures, staking, and its own ecosystem.</p>
+        <div class="broker-meta"><span>Spot fee: from 0.1%</span><span>KYC: required</span></div>
+      </div>
+      <a href="#" class="broker-cta" target="_blank" rel="noopener sponsored">Open Account →</a>
+    </div>
+
+    <div class="broker-card">
+      <div class="broker-info">
+        <h3>Bybit <span class="broker-tag">Crypto · Futures</span></h3>
+        <p>A leading crypto derivatives exchange with an easy-to-use interface and a wide range of futures contracts.</p>
+        <div class="broker-meta"><span>Spot fee: from 0.1%</span><span>KYC: partially optional</span></div>
+      </div>
+      <a href="#" class="broker-cta" target="_blank" rel="noopener sponsored">Open Account →</a>
+    </div>
+
+    <div class="broker-card">
+      <div class="broker-info">
+        <h3>Coinbase <span class="broker-tag">Crypto</span></h3>
+        <p>A publicly traded US company (listed on Nasdaq) and one of the most heavily regulated, beginner-friendly exchanges.</p>
+        <div class="broker-meta"><span>Spot fee: from 0.5%</span><span>KYC: required</span></div>
+      </div>
+      <a href="#" class="broker-cta" target="_blank" rel="noopener sponsored">Open Account →</a>
+    </div>
+
+  </div>
+
+  <p style="font-size:12px;color:var(--text-faint);margin-top:30px;">
+    TTN is not a financial advisor. Leveraged trading carries a high
+    risk of capital loss. Research each platform independently before
+    signing up.
+  </p>
+</div>
+
+<footer>
+  <p>© <span id="year"></span> TTN. Data provided "as is" and does not constitute investment advice.</p>
+  <div>
+    <a href="calculators.html">Calculators</a> ·
+    <a href="brokers.html">Brokers</a> ·
+    <a href="about.html">About</a> ·
+    <a href="privacy.html">Privacy Policy</a>
+  </div>
+</footer>
+<script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+<script src="consent.js"></script>
+</body>
+</html>
