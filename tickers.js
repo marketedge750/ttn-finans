@@ -1,29 +1,18 @@
 /**
  * TTN — live ticker price module
+ *
+ * The visible ticker strip is now TradingView's own "Ticker Tape" widget
+ * (see index.html) — it needs no API key and has no rate limits, so it
+ * never shows a DEMO badge.
+ *
+ * This module keeps running quietly in the background: it still fetches
+ * CoinGecko / Frankfurter / Twelve Data prices, because the news ticker
+ * chips (% change badges) and the Market Snapshot text both need real
+ * numbers to work with — something TradingView's widget can't hand back
+ * to us, since it's a sealed iframe.
  */
 const TTNTickers = (() => {
   const state = {}; // id -> { price, changePct, demo }
-
-  function renderStrip() {
-    const strip = document.getElementById("ticker-strip");
-    strip.innerHTML = TTN_CONFIG.TICKERS.map(
-      (t) => `
-      <div class="ticker-cell" data-id="${t.id}" data-tv="${t.tvSymbol}" data-label="${t.label}">
-        <div class="ticker-label"><span>${t.label}</span></div>
-        <div class="ticker-price skeleton skel-line" id="price-${t.id}" style="width:70%"></div>
-        <div class="ticker-change" id="change-${t.id}"></div>
-      </div>`
-    ).join("");
-
-    strip.querySelectorAll(".ticker-cell").forEach((cell) => {
-      cell.addEventListener("click", () => {
-        strip.querySelectorAll(".ticker-cell").forEach((c) => c.classList.remove("active"));
-        const wasOpenForThis = cell.classList.contains("active");
-        cell.classList.add("active");
-        TTNChart.open(cell.dataset.tv, cell.dataset.label);
-      });
-    });
-  }
 
   function fmtPrice(v, opts = {}) {
     if (v == null || isNaN(v)) return "—";
@@ -32,28 +21,7 @@ const TTNTickers = (() => {
   }
 
   function applyUpdate(id, price, changePct, isDemo) {
-    const prev = state[id]?.price;
     state[id] = { price, changePct, demo: isDemo };
-
-    const priceEl = document.getElementById(`price-${id}`);
-    const changeEl = document.getElementById(`change-${id}`);
-    if (!priceEl || !changeEl) return;
-
-    priceEl.classList.remove("skeleton", "skel-line");
-    priceEl.textContent = fmtPrice(price);
-    if (isDemo) {
-      priceEl.innerHTML += `<span class="badge-demo">DEMO</span>`;
-    }
-
-    if (prev != null) {
-      priceEl.classList.remove("flash-up", "flash-down");
-      void priceEl.offsetWidth; // reflow to restart animation
-      priceEl.classList.add(price >= prev ? "flash-up" : "flash-down");
-    }
-
-    const dir = changePct >= 0 ? "up" : "down";
-    changeEl.className = `ticker-change ${dir}`;
-    changeEl.textContent = `${changePct >= 0 ? "▲" : "▼"} ${Math.abs(changePct).toFixed(2)}%`;
   }
 
   async function fetchCrypto() {
@@ -152,7 +120,6 @@ const TTNTickers = (() => {
   }
 
   function init() {
-    renderStrip();
     const firstLoad = refreshAll();
     setInterval(refreshAll, TTN_CONFIG.PRICE_REFRESH_MS);
     return firstLoad;

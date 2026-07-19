@@ -38,8 +38,14 @@ const TTNChart = (() => {
     }
     currentSymbol = tvSymbol;
 
-    const container = document.getElementById("tv-chart-container");
-    container.innerHTML = ""; // reset widget
+    // Fully replace the container node (not just clear its innerHTML) —
+    // TradingView's widget script doesn't always reinitialize cleanly in a
+    // reused container, which is why switching tickers could get stuck
+    // showing the previous chart.
+    const oldContainer = document.getElementById("tv-chart-container");
+    const freshContainer = document.createElement("div");
+    freshContainer.id = "tv-chart-container";
+    oldContainer.replaceWith(freshContainer);
 
     /* eslint-disable no-undef */
     new TradingView.widget({

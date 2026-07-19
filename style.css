@@ -113,14 +113,11 @@ img { max-width: 100%; display: block; }
 .search-box svg { flex-shrink: 0; opacity: 0.6; width: 15px; height: 15px; }
 
 /* =========================================================
-   Ticker strip
+   Ticker strip (TradingView Ticker Tape widget)
    ========================================================= */
-.ticker-strip {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  background: var(--surface);
+.tv-ticker-tape-wrap {
   border-bottom: 1px solid var(--border);
-  min-height: 62px;
+  background: var(--surface);
 }
 
 .ticker-cell {

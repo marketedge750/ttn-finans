@@ -92,19 +92,19 @@ const TTN_CONFIG = {
     },
   ],
 
-  // Financial news RSS sources (aggregated, never rewritten)
+  // Financial news RSS sources (aggregated, never rewritten).
+  // Verified working as of July 2026 — RSS URLs for financial sites change
+  // more often than you'd expect; MarketWatch's own domain feed died and
+  // moved to a Dow Jones-hosted URL, and Reuters killed its public RSS
+  // entirely (no reliable free replacement, so it's not included here —
+  // see README for details on why).
   NEWS_FEEDS: [
     { name: "CNBC Markets", url: "https://www.cnbc.com/id/100003114/device/rss/rss.html" },
-    { name: "MarketWatch", url: "https://www.marketwatch.com/rss/topstories" },
+    { name: "MarketWatch", url: "https://feeds.content.dowjones.io/public/rss/mw_topstories" },
     { name: "Yahoo Finance", url: "https://finance.yahoo.com/news/rssindex" },
     { name: "Business Insider", url: "https://markets.businessinsider.com/rss/news" },
     { name: "Investing.com", url: "https://www.investing.com/rss/news_25.rss" },
-    // Reuters shut down its own public RSS — this is a working
-    // workaround via Google News, filtered to reuters.com articles only
-    {
-      name: "Reuters",
-      url: "https://news.google.com/rss/search?q=when:24h+allinurl:reuters.com&ceid=US:en&hl=en-US&gl=US",
-    },
+    { name: "Seeking Alpha", url: "https://seekingalpha.com/feed.xml" },
   ],
 
   // Ticker dictionary for auto-detecting assets mentioned in news headlines/descriptions.

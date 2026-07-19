@@ -379,14 +379,38 @@ const TTNNews = (() => {
     renderFeed(filtered.slice(1));
   }
 
+  function normalizeTitle(title) {
+    return title
+      .toLowerCase()
+      .replace(/[^\p{L}\p{N}\s]/gu, "") // strip punctuation
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function dedupeItems(items) {
+    const seenLinks = new Set();
+    const seenTitles = new Set();
+    const result = [];
+    for (const item of items) {
+      if (!item.link || !item.title) continue;
+      const normTitle = normalizeTitle(item.title);
+      if (seenLinks.has(item.link) || seenTitles.has(normTitle)) continue;
+      seenLinks.add(item.link);
+      seenTitles.add(normTitle);
+      result.push(item);
+    }
+    return result;
+  }
+
   async function init() {
     const [feedResults, finnhubResults] = await Promise.all([
       Promise.all(TTN_CONFIG.NEWS_FEEDS.map(fetchFeed)),
       fetchFinnhub(),
     ]);
-    allItems = [...feedResults.flat(), ...finnhubResults]
+    const combined = [...feedResults.flat(), ...finnhubResults]
       .filter((i) => i.title)
       .sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+    allItems = dedupeItems(combined);
 
     if (!allItems.length) {
       allItems = fallbackItems();
