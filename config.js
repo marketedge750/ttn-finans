@@ -15,6 +15,11 @@ const TTN_CONFIG = {
   // Безкоштовний ключ Twelve Data (для S&P 500, Nasdaq, Gold)
   TWELVE_DATA_KEY: "", // <-- встав свій ключ сюди
 
+  // Безкоштовний ключ Finnhub (finnhub.io) — додаткове джерело новин
+  // Реєстрація: https://finnhub.io/register (безкоштовно, 60 запитів/хв)
+  // Без ключа просто пропускається, новини й далі тягнуться з RSS-джерел нижче
+  FINNHUB_KEY: "", // <-- встав свій ключ сюди (необов'язково)
+
   // Безкоштовний ключ rss2json.com (підвищує ліміт запитів новин)
   // Без ключа теж працює, але з меншим лімітом на день
   RSS2JSON_KEY: "", // <-- встав свій ключ сюди (необов'язково)
@@ -82,8 +87,16 @@ const TTN_CONFIG = {
   // RSS-джерела фінансових новин (агрегуються, не переписуються)
   NEWS_FEEDS: [
     { name: "CNBC Markets", url: "https://www.cnbc.com/id/100003114/device/rss/rss.html" },
-    { name: "MarketWatch", url: "https://feeds.marketwatch.com/marketwatch/topstories/" },
+    { name: "MarketWatch", url: "https://www.marketwatch.com/rss/topstories" },
+    { name: "Yahoo Finance", url: "https://finance.yahoo.com/news/rssindex" },
+    { name: "Business Insider", url: "https://markets.businessinsider.com/rss/news" },
     { name: "Investing.com", url: "https://www.investing.com/rss/news_25.rss" },
+    // Reuters вимкнув власний публічний RSS — це обхідний, але робочий
+    // варіант через Google News, відфільтрований лише на статті reuters.com
+    {
+      name: "Reuters",
+      url: "https://news.google.com/rss/search?q=when:24h+allinurl:reuters.com&ceid=US:en&hl=en-US&gl=US",
+    },
   ],
 
   // Словник тікерів для авто-визначення у заголовках/описах новин
