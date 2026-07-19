@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Політика конфіденційності — TTN</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topnav">
+  <div class="brand"><span class="dot">●</span> TTN <small>market watch</small></div>
+  <nav class="nav-links" id="nav-links">
+    <a href="index.html">Головна</a>
+    <a href="calculators.html">Калькулятори</a>
+    <a href="brokers.html">Брокери</a>
+    <a href="about.html">Про нас</a>
+    <a href="privacy.html">Конфіденційність</a>
+  </nav>
+  <button class="nav-toggle" id="nav-toggle" aria-label="Меню">☰</button>
+</header>
+<script>
+  document.getElementById("nav-toggle").addEventListener("click", () => {
+    document.getElementById("nav-links").classList.toggle("open");
+  });
+</script>
+
+<div class="static-page">
+  <h1>Політика конфіденційності</h1>
+  <p>Дата останнього оновлення: <span id="update-date"></span></p>
+
+  <h2>1. Які дані ми збираємо</h2>
+  <p>
+    TTN може використовувати файли cookie та подібні технології для
+    аналітики відвідуваності, показу реклами та покращення роботи сайту.
+    Ми не збираємо персональні дані, окрім тих, що передаються браузером
+    автоматично (тип пристрою, приблизне розташування, статистика
+    відвідувань).
+  </p>
+
+  <h2>2. Реклама та партнерські посилання</h2>
+  <p>
+    Сайт може відображати рекламу через сторонні мережі (наприклад,
+    Google AdSense) та містити партнерські (affiliate) посилання. Ці
+    сервіси можуть встановлювати власні cookie для персоналізації
+    реклами відповідно до їхніх політик конфіденційності.
+  </p>
+
+  <h2>3. Сторонні сервіси</h2>
+  <p>
+    Для відображення графіків використовується віджет TradingView, для
+    курсів — CoinGecko, Frankfurter.app та Twelve Data, для новин —
+    RSS-агрегація через rss2json.com. Ці сервіси можуть обробляти
+    технічні дані запитів (IP-адреса, User-Agent) відповідно до власних
+    політик.
+  </p>
+
+  <h2>4. Cookie-згода</h2>
+  <p>
+    Продовжуючи користуватися сайтом, ви погоджуєтеся на використання
+    файлів cookie відповідно до цієї політики. Ви можете вимкнути cookie
+    в налаштуваннях браузера — це може вплинути на роботу деяких функцій.
+  </p>
+
+  <h2>5. Контакти</h2>
+  <p>
+    З питань щодо цієї політики звертайтеся на електронну адресу,
+    вказану в розділі "Про нас".
+  </p>
+</div>
+
+<footer>
+  <p>© <span id="year"></span> TTN. Дані надаються "як є" і не є інвестиційною порадою.</p>
+  <div>
+    <a href="calculators.html">Калькулятори</a> ·
+    <a href="brokers.html">Брокери</a> ·
+    <a href="about.html">Про нас</a> ·
+    <a href="privacy.html">Політика конфіденційності</a>
+  </div>
+</footer>
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+  document.getElementById("update-date").textContent = new Date().toLocaleDateString("uk-UA");
+</script>
+</body>
+</html>
