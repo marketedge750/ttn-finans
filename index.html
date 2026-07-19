@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TTN — Real-Time Financial News &amp; Markets</title>
+<meta name="description" content="TTN — financial news, live crypto, index, gold and forex quotes with interactive charts.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topnav">
+  <div class="brand"><span class="dot">●</span> TTN <small>market watch</small></div>
+  <nav class="nav-links" id="nav-links">
+    <a href="index.html">Home</a>
+    <a href="calculators.html">Calculators</a>
+    <a href="brokers.html">Brokers</a>
+    <a href="about.html">About</a>
+    <a href="privacy.html">Privacy</a>
+  </nav>
+  <button class="nav-toggle" id="nav-toggle" aria-label="Menu">☰</button>
+  <div class="search-box">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input id="search-input" type="text" placeholder="Search news or ticker (BTC, AAPL...)">
+  </div>
+</header>
+<script>
+  document.getElementById("nav-toggle").addEventListener("click", () => {
+    document.getElementById("nav-links").classList.toggle("open");
+  });
+</script>
+
+<div class="ticker-strip" id="ticker-strip"></div>
+<!-- chart-panel is inserted dynamically by chart.js -->
+
+<div class="market-summary" id="market-summary">
+  <div class="market-summary-head">
+    <span class="section-title" style="margin-bottom:0;">Market Snapshot</span>
+    <span id="market-summary-stamp" class="market-summary-stamp"></span>
+  </div>
+  <p id="market-summary-text">Loading snapshot…</p>
+</div>
+
+<main class="container">
+  <section>
+    <div class="section-title">Top Story</div>
+    <article class="featured" id="featured-article">
+      <div class="featured-body">
+        <div class="skeleton skel-line" style="width:40%"></div>
+        <div class="skeleton skel-line" style="height:26px;width:90%;margin-top:10px;"></div>
+        <div class="skeleton skel-line" style="width:75%"></div>
+      </div>
+    </article>
+
+    <div class="section-title">TTN Analysis</div>
+    <div class="analysis-grid" id="ttn-articles">
+      <div class="analysis-card"><div class="skeleton skel-line" style="width:60%"></div></div>
+    </div>
+
+    <div class="section-title">News Feed</div>
+    <div class="news-feed" id="news-feed">
+      <div class="news-item"><div class="skeleton skel-line" style="width:30%"></div><div class="skeleton skel-line" style="width:95%;height:16px;"></div></div>
+      <div class="news-item"><div class="skeleton skel-line" style="width:30%"></div><div class="skeleton skel-line" style="width:95%;height:16px;"></div></div>
+      <div class="news-item"><div class="skeleton skel-line" style="width:30%"></div><div class="skeleton skel-line" style="width:95%;height:16px;"></div></div>
+    </div>
+  </section>
+
+  <aside>
+    <div class="ad-slot">Ad slot (sidebar)</div>
+
+    <div class="sidebar-block">
+      <div class="section-title" style="margin-bottom:12px;">Trending</div>
+      <ul class="sidebar-list" id="trending-list">
+        <li style="color:var(--text-faint);font-size:13px;">Loading…</li>
+      </ul>
+    </div>
+
+    <div class="sidebar-block">
+      <div class="section-title" style="margin-bottom:12px;">About TTN</div>
+      <p style="font-size:13px;color:var(--text-dim);line-height:1.5;">
+        TTN aggregates real-time financial news and market data:
+        crypto, indices, gold, forex. Click any ticker to open
+        its interactive chart.
+      </p>
+    </div>
+  </aside>
+</main>
+
+<footer>
+  <p>© <span id="year"></span> TTN. Data provided "as is" and does not constitute investment advice.</p>
+  <div>
+    <a href="calculators.html">Calculators</a> ·
+    <a href="brokers.html">Brokers</a> ·
+    <a href="about.html">About</a> ·
+    <a href="privacy.html">Privacy Policy</a>
+  </div>
+</footer>
+
+<script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+<script src="https://s3.tradingview.com/tv.js"></script>
+<script src="config.js"></script>
+<script src="articles.js"></script>
+<script src="chart.js"></script>
+<script src="tickers.js"></script>
+<script src="news.js"></script>
+<script src="market-summary.js"></script>
+<script src="articles-ui.js"></script>
+<script src="app.js"></script>
+<script src="consent.js"></script>
+</body>
+</html>
