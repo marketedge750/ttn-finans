@@ -40,13 +40,21 @@ const TTNArticlesUI = (() => {
     return "general";
   }
 
+  function articleThumbHtml(article, heightPx) {
+    const category = categoryForArticle(article);
+    const photo = TTNNews.getCategoryPhoto(category);
+    const style = `width:100%;height:${heightPx}px;border-radius:${heightPx > 150 ? "0" : "5px"};${heightPx <= 150 ? "margin-bottom:12px;" : ""}`;
+    if (photo) {
+      return `<img src="${photo}" alt="" loading="lazy" style="${style}object-fit:cover;">`;
+    }
+    return `<div class="news-item-thumb-fallback thumb-${category}" style="${style}">${TREND_ICON}</div>`;
+  }
+
   function openArticle(id) {
     const article = TTN_ARTICLES.find((a) => a.id === id);
     if (!article) return;
     const html = `
-      <div class="news-item-thumb-fallback thumb-${categoryForArticle(article)}" style="width:100%;height:180px;border-radius:0;">
-        ${TREND_ICON}
-      </div>
+      ${articleThumbHtml(article, 180)}
       <div class="news-modal-meta">
         <span class="ttn-original-badge">TTN Original</span>
         <span class="source">${article.author}</span> · ${fmtDate(article.date)}
@@ -59,13 +67,14 @@ const TTNArticlesUI = (() => {
     TTNNews.openCustomModal(html);
   }
 
-  function render() {
+  async function render() {
     const el = document.getElementById("ttn-articles");
     if (!el) return;
+    await TTNNews.resolveCategoryPhotos(TTN_ARTICLES.map(categoryForArticle));
     el.innerHTML = TTN_ARTICLES.map(
       (a) => `
       <article class="analysis-card">
-        <div class="news-item-thumb-fallback thumb-${categoryForArticle(a)}" style="width:100%;height:110px;border-radius:5px;margin-bottom:12px;">${TREND_ICON}</div>
+        ${articleThumbHtml(a, 110)}
         <span class="ttn-original-badge">TTN Original</span>
         <h3><a href="#" class="analysis-open" data-id="${a.id}">${a.title}</a></h3>
         <p>${a.dek}</p>

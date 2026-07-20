@@ -102,8 +102,15 @@ const TTNNews = (() => {
 
   function requestClose() {
     // Pops the history entry pushed when the modal opened; the popstate
-    // listener above then actually hides the modal.
+    // listener above then actually hides the modal. As a safety net, if
+    // popstate doesn't fire quickly (some in-app/embedded browsers have
+    // limited history support), we force-close directly so the X button
+    // never gets stuck as the only way out.
+    const modal = document.getElementById("news-modal");
     history.back();
+    setTimeout(() => {
+      if (modal && modal.classList.contains("open")) hideModal();
+    }, 350);
   }
 
   function hideModal() {
@@ -130,7 +137,7 @@ const TTNNews = (() => {
       ${thumbHtml(item, "lg")}
       <div class="news-modal-meta"><span class="source">${item.source}</span> · ${timeAgo(item.pubDate)}</div>
       <h2>${item.title}</h2>
-      ${hasDesc ? `<p>${item.desc}${item.desc.length >= 220 ? "…" : ""}</p>` : `<p style="color:var(--text-faint);">${item.source} didn't include a preview for this story.</p>`}
+      ${hasDesc ? `<p>${item.desc}${item.desc.length >= 220 ? "…" : ""}</p>` : `<p style="color:var(--text-dim);">${item.source} didn't include a preview for this story.</p>`}
       ${tickerTagsHtml(item)}
       <p class="news-modal-note">We show the original headline and a short excerpt with full attribution. The complete article stays on the publisher's own site, in line with copyright and licensing terms.</p>
       <a href="${item.link}" target="_blank" rel="noopener" class="news-modal-source-link">Read full article on ${item.source} →</a>
@@ -244,17 +251,47 @@ const TTNNews = (() => {
     return "stocks";
   }
 
+  const categoryPhotoCache = {}; // category -> photo URL | null
+
+  async function resolveCategoryPhotos(categories) {
+    if (!TTN_CONFIG.PEXELS_KEY) return;
+    const needed = [...new Set(categories)].filter((c) => !(c in categoryPhotoCache));
+    if (!needed.length) return;
+    await Promise.all(
+      needed.map(async (category) => {
+        const query = TTN_CONFIG.CATEGORY_PHOTO_QUERIES[category] || TTN_CONFIG.CATEGORY_PHOTO_QUERIES.general;
+        try {
+          const res = await fetch(
+            `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=1&orientation=landscape`,
+            { headers: { Authorization: TTN_CONFIG.PEXELS_KEY } }
+          );
+          const data = await res.json();
+          categoryPhotoCache[category] = data.photos?.[0]?.src?.large || null;
+        } catch (e) {
+          categoryPhotoCache[category] = null;
+        }
+      })
+    );
+  }
+
   function thumbHtml(item, size) {
     const cls = size === "lg" ? "featured-img" : "news-item-thumb";
+    const category = categoryFor(item);
     if (item.image) {
       // No inline onerror attribute here on purpose — the SVG's own quote
       // characters would break out of a quoted HTML attribute. Instead we
       // mark the img with data attributes and wire up error handling in
       // JS after it's inserted (see attachThumbFallbacks).
-      return `<img class="${cls}" src="${item.image}" alt="" loading="lazy" data-thumb-fallback="1" data-thumb-size="${size}" data-thumb-category="${categoryFor(item)}">`;
+      return `<img class="${cls}" src="${item.image}" alt="" loading="lazy" data-thumb-fallback="1" data-thumb-size="${size}" data-thumb-category="${category}">`;
+    }
+    // Source gave us no photo — use a relevant Pexels stock photo if we
+    // have one cached for this category, so cards rarely show a plain icon.
+    const categoryPhoto = categoryPhotoCache[category];
+    if (categoryPhoto) {
+      return `<img class="${cls}" src="${categoryPhoto}" alt="" loading="lazy" data-thumb-fallback="1" data-thumb-size="${size}" data-thumb-category="${category}">`;
     }
     const fallbackCls = size === "lg" ? "featured-img" : "news-item-thumb-fallback";
-    return `<div class="${fallbackCls} thumb-${categoryFor(item)}">${TREND_ICON}</div>`;
+    return `<div class="${fallbackCls} thumb-${category}">${TREND_ICON}</div>`;
   }
 
   function attachThumbFallbacks(root) {
@@ -398,6 +435,7 @@ const TTNNews = (() => {
       );
     });
     await resolveTickerPrices(filtered.slice(0, 13));
+    await resolveCategoryPhotos(filtered.slice(0, 13).map((i) => categoryFor(i)));
     renderFeatured(filtered[0]);
     renderFeed(filtered.slice(1));
   }
@@ -440,6 +478,7 @@ const TTNNews = (() => {
     }
 
     await resolveTickerPrices(allItems.slice(0, 13));
+    await resolveCategoryPhotos(allItems.slice(0, 13).map((i) => categoryFor(i)));
     renderFeatured(allItems[0]);
     renderFeed(allItems.slice(1, 13));
     renderTrending();
@@ -471,5 +510,13 @@ const TTNNews = (() => {
     showModal();
   }
 
-  return { init, applySearch, openCustomModal, getTrending, getAllItems };
+  return {
+    init,
+    applySearch,
+    openCustomModal,
+    getTrending,
+    getAllItems,
+    resolveCategoryPhotos,
+    getCategoryPhoto: (category) => categoryPhotoCache[category] || null,
+  };
 })();
