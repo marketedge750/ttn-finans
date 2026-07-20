@@ -35,7 +35,7 @@ const TTN_CONFIG = {
   // Seeking Alpha, Investing.com, and others). Without a key, cards with
   // no source photo fall back to a plain icon instead.
   // Sign up: https://www.pexels.com/api/ (free, no card required)
-  PEXELS_KEY: "", // <-- paste your key here (optional but recommended)
+  PEXELS_KEY: "egFatky8LlcBGp4hdoSNHslhOcGbX4m7wZr3x4Nptc2HKWlZv6NQjkgn", // <-- paste your key here (optional but recommended)
 
   // Price refresh interval (ms)
   PRICE_REFRESH_MS: 45000,
