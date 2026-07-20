@@ -262,7 +262,7 @@ const TTNNews = (() => {
         const query = TTN_CONFIG.CATEGORY_PHOTO_QUERIES[category] || TTN_CONFIG.CATEGORY_PHOTO_QUERIES.general;
         try {
           const res = await fetch(
-            `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=8&orientation=landscape`,
+            `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=24&orientation=landscape`,
             { headers: { Authorization: TTN_CONFIG.PEXELS_KEY } }
           );
           const data = await res.json();
