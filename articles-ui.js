@@ -34,15 +34,15 @@ const TTNArticlesUI = (() => {
   function categoryForArticle(article) {
     const tickers = article.tickers || [];
     if (tickers.some((t) => ["BTC", "ETH"].includes(t))) return "crypto";
-    if (tickers.includes("EUR/USD")) return "forex";
     if (tickers.includes("GOLD")) return "gold";
+    if (tickers.includes("EUR/USD")) return "forex";
     if (tickers.length) return "stocks";
     return "general";
   }
 
   function articleThumbHtml(article, heightPx) {
     const category = categoryForArticle(article);
-    const photo = TTNNews.getCategoryPhoto(category);
+    const photo = TTNNews.getCategoryPhoto(category, article.id);
     const style = `width:100%;height:${heightPx}px;border-radius:${heightPx > 150 ? "0" : "5px"};${heightPx <= 150 ? "margin-bottom:12px;" : ""}`;
     if (photo) {
       return `<img src="${photo}" alt="" loading="lazy" style="${style}object-fit:cover;">`;

@@ -251,7 +251,7 @@ const TTNNews = (() => {
     return "stocks";
   }
 
-  const categoryPhotoCache = {}; // category -> photo URL | null
+  const categoryPhotoCache = {}; // category -> array of photo URLs
 
   async function resolveCategoryPhotos(categories) {
     if (!TTN_CONFIG.PEXELS_KEY) return;
@@ -262,16 +262,34 @@ const TTNNews = (() => {
         const query = TTN_CONFIG.CATEGORY_PHOTO_QUERIES[category] || TTN_CONFIG.CATEGORY_PHOTO_QUERIES.general;
         try {
           const res = await fetch(
-            `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=1&orientation=landscape`,
+            `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=8&orientation=landscape`,
             { headers: { Authorization: TTN_CONFIG.PEXELS_KEY } }
           );
           const data = await res.json();
-          categoryPhotoCache[category] = data.photos?.[0]?.src?.large || null;
+          const urls = (data.photos || []).map((p) => p.src?.large).filter(Boolean);
+          categoryPhotoCache[category] = urls.length ? urls : null;
         } catch (e) {
           categoryPhotoCache[category] = null;
         }
       })
     );
+  }
+
+  // Simple stable hash so the same item always picks the same photo from
+  // the pool (no flicker on re-render) while different items spread out
+  // across the available photos instead of all sharing photo #1.
+  function stableIndex(key, poolSize) {
+    let hash = 0;
+    for (let i = 0; i < key.length; i++) {
+      hash = (hash * 31 + key.charCodeAt(i)) >>> 0;
+    }
+    return hash % poolSize;
+  }
+
+  function pickCategoryPhoto(category, key) {
+    const pool = categoryPhotoCache[category];
+    if (!pool || !pool.length) return null;
+    return pool[stableIndex(key, pool.length)];
   }
 
   function thumbHtml(item, size) {
@@ -286,7 +304,7 @@ const TTNNews = (() => {
     }
     // Source gave us no photo — use a relevant Pexels stock photo if we
     // have one cached for this category, so cards rarely show a plain icon.
-    const categoryPhoto = categoryPhotoCache[category];
+    const categoryPhoto = pickCategoryPhoto(category, item.link || item.title || "");
     if (categoryPhoto) {
       return `<img class="${cls}" src="${categoryPhoto}" alt="" loading="lazy" data-thumb-fallback="1" data-thumb-size="${size}" data-thumb-category="${category}">`;
     }
@@ -517,6 +535,6 @@ const TTNNews = (() => {
     getTrending,
     getAllItems,
     resolveCategoryPhotos,
-    getCategoryPhoto: (category) => categoryPhotoCache[category] || null,
+    getCategoryPhoto: (category, key) => pickCategoryPhoto(category, key || category),
   };
 })();
