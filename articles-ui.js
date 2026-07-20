@@ -65,14 +65,12 @@ const TTNArticlesUI = (() => {
     el.innerHTML = TTN_ARTICLES.map(
       (a) => `
       <article class="analysis-card">
-        <div class="news-item-thumb-fallback thumb-${categoryForArticle(a)}">${TREND_ICON}</div>
-        <div class="news-item-body">
-          <span class="ttn-original-badge">TTN Original</span>
-          <h3><a href="#" class="analysis-open" data-id="${a.id}">${a.title}</a></h3>
-          <p>${a.dek}</p>
-          <div class="news-meta"><span class="source">${a.author}</span><span>${fmtDate(a.date)}</span></div>
-          ${tickerChipsHtml(a)}
-        </div>
+        <div class="news-item-thumb-fallback thumb-${categoryForArticle(a)}" style="width:100%;height:110px;border-radius:5px;margin-bottom:12px;">${TREND_ICON}</div>
+        <span class="ttn-original-badge">TTN Original</span>
+        <h3><a href="#" class="analysis-open" data-id="${a.id}">${a.title}</a></h3>
+        <p>${a.dek}</p>
+        <div class="news-meta"><span class="source">${a.author}</span><span>${fmtDate(a.date)}</span></div>
+        ${tickerChipsHtml(a)}
       </article>`
     ).join("");
 

@@ -82,37 +82,62 @@ const TTNNews = (() => {
         <div id="news-modal-body"></div>
       </div>`;
     document.body.appendChild(modal);
-    modal.querySelector("#news-modal-overlay").addEventListener("click", closeModal);
-    modal.querySelector("#news-modal-close").addEventListener("click", closeModal);
+    // All three ways of dismissing the modal (X button, tapping the overlay,
+    // Escape key) go through history.back() rather than closing directly.
+    // That keeps a single source of truth: the modal is only ever actually
+    // hidden by the popstate handler below, so the phone's physical/browser
+    // back button behaves exactly the same as tapping X — it reveals the
+    // homepage underneath instead of navigating to whatever page happened
+    // to be earlier in browser history.
+    modal.querySelector("#news-modal-overlay").addEventListener("click", requestClose);
+    modal.querySelector("#news-modal-close").addEventListener("click", requestClose);
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") closeModal();
+      if (e.key === "Escape" && modal.classList.contains("open")) requestClose();
+    });
+    window.addEventListener("popstate", (e) => {
+      hideModal();
     });
     return modal;
   }
 
-  function closeModal() {
+  function requestClose() {
+    // Pops the history entry pushed when the modal opened; the popstate
+    // listener above then actually hides the modal.
+    history.back();
+  }
+
+  function hideModal() {
     const modal = document.getElementById("news-modal");
     if (modal) modal.classList.remove("open");
     document.body.classList.remove("modal-open");
+  }
+
+  function showModal() {
+    const modal = document.getElementById("news-modal");
+    if (!modal.classList.contains("open")) {
+      history.pushState({ ttnModal: true }, "", location.href);
+    }
+    modal.classList.add("open");
+    document.body.classList.add("modal-open");
   }
 
   function openModal(link) {
     const item = itemsIndex[link];
     if (!item) return;
     const modal = ensureModal();
+    const hasDesc = item.desc && item.desc.trim().length > 0;
     document.getElementById("news-modal-body").innerHTML = `
       ${thumbHtml(item, "lg")}
       <div class="news-modal-meta"><span class="source">${item.source}</span> · ${timeAgo(item.pubDate)}</div>
       <h2>${item.title}</h2>
-      <p>${item.desc}${item.desc.length >= 220 ? "…" : ""}</p>
+      ${hasDesc ? `<p>${item.desc}${item.desc.length >= 220 ? "…" : ""}</p>` : `<p style="color:var(--text-faint);">${item.source} didn't include a preview for this story.</p>`}
       ${tickerTagsHtml(item)}
-      <a href="${item.link}" target="_blank" rel="noopener" class="news-modal-source-link">Read full article on ${item.source} →</a>
       <p class="news-modal-note">We show the original headline and a short excerpt with full attribution. The complete article stays on the publisher's own site, in line with copyright and licensing terms.</p>
+      <a href="${item.link}" target="_blank" rel="noopener" class="news-modal-source-link">Read full article on ${item.source} →</a>
     `;
     attachTagHandlers(modal);
     attachThumbFallbacks(modal);
-    modal.classList.add("open");
-    document.body.classList.add("modal-open");
+    showModal();
   }
 
   function stripHtml(html) {
@@ -286,7 +311,6 @@ const TTNNews = (() => {
       <div class="featured-body">
         <div class="featured-meta"><span class="source">${item.source}</span> · ${timeAgo(item.pubDate)}</div>
         <h1><a href="#" class="open-article" data-link="${item.link}">${item.title}</a></h1>
-        <p class="dek">${item.desc}${item.desc.length >= 220 ? "…" : ""}</p>
         ${tickerTagsHtml(item)}
         <p style="margin-top:12px;"><a href="#" class="open-article" data-link="${item.link}" style="color:var(--accent);font-size:13px;">Read this story →</a></p>
       </div>`;
@@ -310,7 +334,6 @@ const TTNNews = (() => {
         <div class="news-item-body">
           <div class="news-meta"><span class="source">${item.source}</span><span>${timeAgo(item.pubDate)}</span></div>
           <h3><a href="#" class="open-article" data-link="${item.link}">${item.title}</a></h3>
-          <p>${item.desc}${item.desc.length >= 220 ? "…" : ""}</p>
           ${tickerTagsHtml(item)}
         </div>
       </article>`
@@ -445,8 +468,7 @@ const TTNNews = (() => {
     document.getElementById("news-modal-body").innerHTML = html;
     attachTagHandlers(modal);
     attachThumbFallbacks(modal);
-    modal.classList.add("open");
-    document.body.classList.add("modal-open");
+    showModal();
   }
 
   return { init, applySearch, openCustomModal, getTrending, getAllItems };

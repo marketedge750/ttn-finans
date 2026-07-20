@@ -329,8 +329,8 @@ img { max-width: 100%; display: block; }
 
 /* TTN Analysis (original articles) */
 .analysis-grid {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 14px;
   margin-bottom: 36px;
 }
@@ -338,18 +338,21 @@ img { max-width: 100%; display: block; }
   border: 1px solid var(--accent-dim);
   border-radius: var(--radius);
   background: var(--surface);
-  padding: 14px;
-  display: flex;
-  gap: 14px;
+  padding: 16px;
+  position: relative;
 }
 .analysis-card h3 {
   font-size: 15px;
   line-height: 1.35;
-  margin: 6px 0 6px;
+  margin: 8px 0 6px;
   font-weight: 700;
 }
 .analysis-card h3 a:hover { color: var(--accent); }
 .analysis-card p { font-size: 13px; color: var(--text-dim); margin-bottom: 8px; }
+
+@media (max-width: 700px) {
+  .analysis-grid { grid-template-columns: 1fr; }
+}
 
 .ttn-original-badge {
   display: inline-block;
@@ -822,7 +825,6 @@ body.modal-open { overflow: hidden; }
     border-top: 1px solid var(--border);
     font-size: 15px;
   }
-  .topnav { position: relative; }
 }
 
 @media (max-width: 520px) {
