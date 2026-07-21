@@ -56,16 +56,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     subEl.textContent = "Loading rate…";
-    try {
-      const res = await fetch(`https://api.frankfurter.app/latest?from=${from}&to=${to}`);
-      const data = await res.json();
-      const rate = data.rates[to];
-      fxRateCache[cacheKey] = rate;
-      resultEl.textContent = `${fmt(amount * rate)} ${to}`;
-      subEl.textContent = `1 ${from} = ${rate.toFixed(4)} ${to}`;
-    } catch (e) {
-      subEl.textContent = "Rate temporarily unavailable";
-      resultEl.textContent = "—";
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      try {
+        const res = await fetch(`https://api.frankfurter.app/latest?from=${from}&to=${to}`);
+        const data = await res.json();
+        const rate = data.rates[to];
+        if (!rate) throw new Error("no rate in response");
+        fxRateCache[cacheKey] = rate;
+        resultEl.textContent = `${fmt(amount * rate)} ${to}`;
+        subEl.textContent = `1 ${from} = ${rate.toFixed(4)} ${to}`;
+        return;
+      } catch (e) {
+        if (attempt === 3) {
+          subEl.textContent = "Rate temporarily unavailable — check your connection and try again";
+          resultEl.textContent = "—";
+        } else {
+          await new Promise((r) => setTimeout(r, 500 * attempt)); // brief backoff before retrying
+        }
+      }
     }
   }
   document.getElementById("fx-amount").addEventListener("input", calcFx);
@@ -128,4 +136,87 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById(id).addEventListener("input", calcLoan)
   );
   calcLoan();
+
+  /* ---------- 5. Crypto converter (live via CoinGecko) ---------- */
+  const cryptoIds = { BTC: "bitcoin", ETH: "ethereum" };
+  let cryptoPriceCache = {}; // "BTC" -> price in USD
+
+  async function fetchCryptoPrices() {
+    const needed = Object.keys(cryptoIds).filter((sym) => !(sym in cryptoPriceCache));
+    if (!needed.length) return;
+    const ids = needed.map((sym) => cryptoIds[sym]).join(",");
+    try {
+      const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd`);
+      const data = await res.json();
+      needed.forEach((sym) => {
+        cryptoPriceCache[sym] = data[cryptoIds[sym]]?.usd || null;
+      });
+    } catch (e) {
+      needed.forEach((sym) => (cryptoPriceCache[sym] = null));
+    }
+  }
+
+  function cryptoToUsd(amount, symbol) {
+    if (symbol === "USD") return amount;
+    const price = cryptoPriceCache[symbol];
+    return price ? amount * price : null;
+  }
+
+  function usdToCrypto(usdAmount, symbol) {
+    if (symbol === "USD") return usdAmount;
+    const price = cryptoPriceCache[symbol];
+    return price ? usdAmount / price : null;
+  }
+
+  async function calcCrypto() {
+    const amount = parseFloat(document.getElementById("crypto-amount").value) || 0;
+    const from = document.getElementById("crypto-from").value;
+    const to = document.getElementById("crypto-to").value;
+    const subEl = document.getElementById("crypto-sub");
+    const resultEl = document.getElementById("crypto-result");
+
+    if (from === to) {
+      resultEl.textContent = `${fmt(amount)} ${to}`;
+      subEl.textContent = "Same asset";
+      return;
+    }
+
+    if (Object.keys(cryptoIds).some((sym) => !(sym in cryptoPriceCache))) {
+      subEl.textContent = "Loading price…";
+      await fetchCryptoPrices();
+    }
+
+    const usdValue = cryptoToUsd(amount, from);
+    if (usdValue == null) {
+      subEl.textContent = "Price temporarily unavailable — check your connection and try again";
+      resultEl.textContent = "—";
+      return;
+    }
+    const result = usdToCrypto(usdValue, to);
+    if (result == null) {
+      subEl.textContent = "Price temporarily unavailable — check your connection and try again";
+      resultEl.textContent = "—";
+      return;
+    }
+
+    const decimals = to === "USD" ? 2 : 8;
+    resultEl.textContent = `${result.toLocaleString("en-US", { maximumFractionDigits: decimals })} ${to}`;
+    if (from === "USD" && cryptoPriceCache[to]) {
+      subEl.textContent = `1 ${to} = $${fmt(cryptoPriceCache[to])}`;
+    } else if (to === "USD" && cryptoPriceCache[from]) {
+      subEl.textContent = `1 ${from} = $${fmt(cryptoPriceCache[from])}`;
+    } else {
+      subEl.textContent = `Live CoinGecko price`;
+    }
+  }
+  document.getElementById("crypto-amount").addEventListener("input", calcCrypto);
+  document.getElementById("crypto-from").addEventListener("change", calcCrypto);
+  document.getElementById("crypto-to").addEventListener("change", calcCrypto);
+  document.getElementById("crypto-swap").addEventListener("click", () => {
+    const from = document.getElementById("crypto-from");
+    const to = document.getElementById("crypto-to");
+    [from.value, to.value] = [to.value, from.value];
+    calcCrypto();
+  });
+  calcCrypto();
 });

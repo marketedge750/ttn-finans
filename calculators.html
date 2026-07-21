@@ -158,6 +158,40 @@
       </div>
     </div>
 
+    <!-- Crypto converter -->
+    <div class="calc-card">
+      <h2>Crypto Converter</h2>
+      <p class="calc-desc">Live BTC / ETH price via CoinGecko</p>
+      <div class="calc-field">
+        <label>Amount</label>
+        <input type="number" id="crypto-amount" value="500" min="0">
+      </div>
+      <div class="calc-row">
+        <div class="calc-field">
+          <label>From</label>
+          <select id="crypto-from">
+            <option value="USD" selected>USD</option>
+            <option value="BTC">BTC</option>
+            <option value="ETH">ETH</option>
+          </select>
+        </div>
+        <div class="calc-field">
+          <label>To</label>
+          <select id="crypto-to">
+            <option value="USD">USD</option>
+            <option value="BTC" selected>BTC</option>
+            <option value="ETH">ETH</option>
+          </select>
+        </div>
+      </div>
+      <button class="calc-swap-btn" id="crypto-swap">⇅ Swap</button>
+      <div class="calc-result">
+        <div class="label">Result</div>
+        <div class="big" id="crypto-result">—</div>
+        <div class="sub" id="crypto-sub">Loading price…</div>
+      </div>
+    </div>
+
   </div>
 </div>
 
