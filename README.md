@@ -32,7 +32,7 @@ ttn-finance/
 | EUR/USD | Frankfurter.app | Ні |
 | S&P 500, Nasdaq, Gold | Twelve Data | Так (безкоштовний рівень) |
 | Графіки і панель тікерів | TradingView Widget | Ні |
-| Новини | rss2json.com (6 RSS-джерел) + Finnhub (додатково) | Бажано, але не обов'язково |
+| Новини | rss2json.com (6 RSS-джерел) + Finnhub + Currents API + APITube (усі додаткові) | Бажано, але не обов'язково |
 | Фото для новин без власної картинки | Pexels API | Бажано (без нього — іконка-заглушка) |
 
 **Без ключів сайт повністю робочий** — тікери без ключа Twelve Data
@@ -44,8 +44,10 @@ ttn-finance/
 1. Twelve Data (S&P 500 / Nasdaq / Gold): https://twelvedata.com/pricing → Basic (free), вставити в `TTN_CONFIG.TWELVE_DATA_KEY`
 2. CoinGecko Demo (стабільніші ціни BTC/ETH): https://www.coingecko.com/en/api/pricing → Demo (free), вставити в `TTN_CONFIG.COINGECKO_KEY`
 3. Finnhub (додаткове джерело новин): https://finnhub.io/register → безкоштовно, вставити в `TTN_CONFIG.FINNHUB_KEY`
-4. rss2json (підвищує ліміт новин): https://rss2json.com/ → вставити в `TTN_CONFIG.RSS2JSON_KEY`
-5. Pexels (гарантовані фото для новин без власної картинки): https://www.pexels.com/api/ → безкоштовно, вставити в `TTN_CONFIG.PEXELS_KEY`
+4. Currents API (структуровані новини з реальними фото частіше, ніж RSS): https://currentsapi.services → безкоштовно, вставити в `TTN_CONFIG.CURRENTS_KEY`
+5. APITube (те саме + оцінка тональності новин): https://apitube.io → безкоштовно, вставити в `TTN_CONFIG.APITUBE_KEY`
+6. rss2json (підвищує ліміт новин): https://rss2json.com/ → вставити в `TTN_CONFIG.RSS2JSON_KEY`
+7. Pexels (гарантовані фото для новин без власної картинки): https://www.pexels.com/api/ → безкоштовно, вставити в `TTN_CONFIG.PEXELS_KEY`
 
 ## Розгортання через GitHub Pages
 

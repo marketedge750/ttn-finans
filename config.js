@@ -26,6 +26,16 @@ const TTN_CONFIG = {
   // Without a key this is simply skipped — news still loads from RSS below
   FINNHUB_KEY: "", // <-- paste your key here (optional)
 
+  // Free Currents API key — structured news JSON with real per-article
+  // images more often than RSS. Free tier explicitly allows commercial use.
+  // Sign up: https://currentsapi.services (free, no card, ~600-1000 req/day)
+  CURRENTS_KEY: "", // <-- paste your key here (optional)
+
+  // Free APITube key — structured news JSON with sentiment/category data
+  // and real per-article images. Free tier explicitly allows commercial use.
+  // Sign up: https://apitube.io (free, no card, 1000 req/day)
+  APITUBE_KEY: "", // <-- paste your key here (optional)
+
   // Free rss2json.com key (raises the daily news request limit)
   // Works without a key too, just with a lower daily limit
   RSS2JSON_KEY: "", // <-- paste your key here (optional)

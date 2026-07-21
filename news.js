@@ -224,6 +224,54 @@ const TTNNews = (() => {
     }
   }
 
+  async function fetchCurrents() {
+    if (!TTN_CONFIG.CURRENTS_KEY) return [];
+    try {
+      const res = await fetch(
+        `https://api.currentsapi.services/v1/search?category=economy_business_finance&language=en&page_size=25`,
+        { headers: { Authorization: TTN_CONFIG.CURRENTS_KEY } }
+      );
+      const data = await res.json();
+      if (!Array.isArray(data.news)) return [];
+      return data.news.map((item) => ({
+        title: item.title,
+        desc: stripHtml(item.description || "").slice(0, 220),
+        link: item.url,
+        image: item.image && item.image !== "None" ? item.image : null,
+        pubDate: item.published,
+        source: "Currents",
+      }));
+    } catch (e) {
+      return [];
+    }
+  }
+
+  async function fetchApitube() {
+    if (!TTN_CONFIG.APITUBE_KEY) return [];
+    try {
+      const res = await fetch(
+        `https://api.apitube.io/v1/news/everything?title=stocks,markets,crypto,economy&language.code=en&per_page=25`,
+        { headers: { "X-API-Key": TTN_CONFIG.APITUBE_KEY } }
+      );
+      const data = await res.json();
+      const results = data.results || data.articles || [];
+      if (!Array.isArray(results)) return [];
+      return results.map((item) => ({
+        title: item.title,
+        desc: stripHtml(item.description || item.summary || "").slice(0, 220),
+        link: item.href || item.url || item.link,
+        // APITube's exact image field wasn't fully confirmed against a live
+        // response when this was written — checking a few likely names so
+        // this degrades gracefully to the icon fallback rather than break.
+        image: item.image?.url || item.image || item.media?.thumbnail || null,
+        pubDate: item.published_at || item.publishedAt || item.date,
+        source: item.source?.name ? `APITube · ${item.source.name}` : "APITube",
+      }));
+    } catch (e) {
+      return [];
+    }
+  }
+
   function tickerTagsHtml(item) {
     const tickers = detectTickers(`${item.title} ${item.desc}`);
     if (!tickers.length) return "";
@@ -481,15 +529,44 @@ const TTNNews = (() => {
     return result;
   }
 
+  // Groups items by source (each group already newest-first from the
+  // earlier sort), then interleaves round-robin — one from each source in
+  // turn — so a source that happens to publish a burst of items doesn't
+  // flood the top of the feed and crowd out everyone else. Recency still
+  // matters (each source's own queue is newest-first), it's just no longer
+  // the *only* thing that decides order.
+  function balanceBySource(items) {
+    const bySource = new Map();
+    items.forEach((item) => {
+      const key = item.source;
+      if (!bySource.has(key)) bySource.set(key, []);
+      bySource.get(key).push(item);
+    });
+    const queues = [...bySource.values()];
+    const result = [];
+    let remaining = items.length;
+    while (remaining > 0) {
+      for (const queue of queues) {
+        if (queue.length) {
+          result.push(queue.shift());
+          remaining--;
+        }
+      }
+    }
+    return result;
+  }
+
   async function init() {
-    const [feedResults, finnhubResults] = await Promise.all([
+    const [feedResults, finnhubResults, currentsResults, apitubeResults] = await Promise.all([
       Promise.all(TTN_CONFIG.NEWS_FEEDS.map(fetchFeed)),
       fetchFinnhub(),
+      fetchCurrents(),
+      fetchApitube(),
     ]);
-    const combined = [...feedResults.flat(), ...finnhubResults]
+    const combined = [...feedResults.flat(), ...finnhubResults, ...currentsResults, ...apitubeResults]
       .filter((i) => i.title)
       .sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
-    allItems = dedupeItems(combined);
+    allItems = balanceBySource(dedupeItems(combined));
 
     if (!allItems.length) {
       allItems = fallbackItems();

@@ -1,5 +1,5 @@
 /**
- * TTN — фінансові калькулятори
+ * TTN — financial calculators
  */
 document.addEventListener("DOMContentLoaded", () => {
   const fmt = (v) =>
@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const growth = balance - totalContributed;
     document.getElementById("ci-result").textContent = `$${fmt(balance)}`;
     document.getElementById("ci-sub").textContent =
-      `Внесено: $${fmt(totalContributed)} · Приріст: $${fmt(growth)}`;
+      `Contributed: $${fmt(totalContributed)} · Growth: $${fmt(growth)}`;
   }
   ["ci-principal", "ci-monthly", "ci-rate", "ci-years"].forEach((id) =>
     document.getElementById(id).addEventListener("input", calcCompound)
@@ -68,9 +68,9 @@ document.addEventListener("DOMContentLoaded", () => {
       resultEl.textContent = "—";
     }
   }
-  ["fx-amount", "fx-from", "fx-to"].forEach((id) =>
-    document.getElementById(id).addEventListener("input", calcFx)
-  );
+  document.getElementById("fx-amount").addEventListener("input", calcFx);
+  document.getElementById("fx-from").addEventListener("change", calcFx);
+  document.getElementById("fx-to").addEventListener("change", calcFx);
   document.getElementById("fx-swap").addEventListener("click", () => {
     const from = document.getElementById("fx-from");
     const to = document.getElementById("fx-to");
@@ -95,7 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
     resultEl.textContent = `${pnl >= 0 ? "+" : ""}$${fmt(pnl)}`;
     resultEl.style.color = pnl >= 0 ? "var(--up)" : "var(--down)";
     document.getElementById("pnl-sub").textContent =
-      `${pnlPct >= 0 ? "+" : ""}${pnlPct.toFixed(2)}% · Плече ${leverage}x`;
+      `${pnlPct >= 0 ? "+" : ""}${pnlPct.toFixed(2)}% · Leverage ${leverage}x`;
   }
   ["pnl-entry", "pnl-current", "pnl-amount", "pnl-leverage"].forEach((id) =>
     document.getElementById(id).addEventListener("input", calcPnl)
@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("loan-result").textContent = `$${fmt(payment)}`;
     document.getElementById("loan-sub").textContent =
-      `Загалом: $${fmt(totalPaid)} · Переплата: $${fmt(totalInterest)}`;
+      `Total: $${fmt(totalPaid)} · Extra cost: $${fmt(totalInterest)}`;
   }
   ["loan-amount", "loan-rate", "loan-term"].forEach((id) =>
     document.getElementById(id).addEventListener("input", calcLoan)
