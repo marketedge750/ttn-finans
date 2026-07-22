@@ -56,9 +56,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     subEl.textContent = "Loading rate…";
-    for (let attempt = 1; attempt <= 3; attempt++) {
+    const endpoints = [
+      `https://api.frankfurter.app/latest?from=${from}&to=${to}`,
+      `https://api.frankfurter.dev/v1/latest?base=${from}&symbols=${to}`,
+      `https://api.frankfurter.app/latest?from=${from}&to=${to}`,
+    ];
+    for (let attempt = 0; attempt < endpoints.length; attempt++) {
       try {
-        const res = await fetch(`https://api.frankfurter.app/latest?from=${from}&to=${to}`);
+        const res = await fetch(endpoints[attempt]);
         const data = await res.json();
         const rate = data.rates[to];
         if (!rate) throw new Error("no rate in response");
@@ -67,16 +72,20 @@ document.addEventListener("DOMContentLoaded", () => {
         subEl.textContent = `1 ${from} = ${rate.toFixed(4)} ${to}`;
         return;
       } catch (e) {
-        if (attempt === 3) {
+        if (attempt === endpoints.length - 1) {
           subEl.textContent = "Rate temporarily unavailable — check your connection and try again";
           resultEl.textContent = "—";
         } else {
-          await new Promise((r) => setTimeout(r, 500 * attempt)); // brief backoff before retrying
+          await new Promise((r) => setTimeout(r, 400)); // brief pause before trying the next endpoint
         }
       }
     }
   }
-  document.getElementById("fx-amount").addEventListener("input", calcFx);
+  let fxDebounce;
+  document.getElementById("fx-amount").addEventListener("input", () => {
+    clearTimeout(fxDebounce);
+    fxDebounce = setTimeout(calcFx, 350);
+  });
   document.getElementById("fx-from").addEventListener("change", calcFx);
   document.getElementById("fx-to").addEventListener("change", calcFx);
   document.getElementById("fx-swap").addEventListener("click", () => {

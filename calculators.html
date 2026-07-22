@@ -35,35 +35,6 @@
 
   <div class="calc-grid">
 
-    <!-- Compound Interest -->
-    <div class="calc-card">
-      <h2>Compound Interest</h2>
-      <p class="calc-desc">See how your savings or investment grows over time</p>
-      <div class="calc-field">
-        <label>Initial amount ($)</label>
-        <input type="number" id="ci-principal" value="1000" min="0">
-      </div>
-      <div class="calc-row">
-        <div class="calc-field">
-          <label>Monthly contribution ($)</label>
-          <input type="number" id="ci-monthly" value="100" min="0">
-        </div>
-        <div class="calc-field">
-          <label>Annual rate (%)</label>
-          <input type="number" id="ci-rate" value="7" step="0.1">
-        </div>
-      </div>
-      <div class="calc-field">
-        <label>Time horizon (years)</label>
-        <input type="number" id="ci-years" value="10" min="1" max="60">
-      </div>
-      <div class="calc-result">
-        <div class="label">Final balance</div>
-        <div class="big" id="ci-result">—</div>
-        <div class="sub" id="ci-sub"></div>
-      </div>
-    </div>
-
     <!-- Currency converter -->
     <div class="calc-card">
       <h2>Currency Converter</h2>
@@ -102,37 +73,6 @@
       </div>
     </div>
 
-    <!-- Crypto P&L -->
-    <div class="calc-card">
-      <h2>Crypto Profit / Loss</h2>
-      <p class="calc-desc">Calculate P&amp;L on an open position</p>
-      <div class="calc-row">
-        <div class="calc-field">
-          <label>Entry price ($)</label>
-          <input type="number" id="pnl-entry" value="60000" min="0">
-        </div>
-        <div class="calc-field">
-          <label>Current price ($)</label>
-          <input type="number" id="pnl-current" value="65000" min="0">
-        </div>
-      </div>
-      <div class="calc-row">
-        <div class="calc-field">
-          <label>Investment amount ($)</label>
-          <input type="number" id="pnl-amount" value="1000" min="0">
-        </div>
-        <div class="calc-field">
-          <label>Leverage</label>
-          <input type="number" id="pnl-leverage" value="1" min="1" max="125">
-        </div>
-      </div>
-      <div class="calc-result">
-        <div class="label">Profit / loss</div>
-        <div class="big" id="pnl-result">—</div>
-        <div class="sub" id="pnl-sub"></div>
-      </div>
-    </div>
-
     <!-- Loan calculator -->
     <div class="calc-card">
       <h2>Loan Calculator</h2>
@@ -155,6 +95,35 @@
         <div class="label">Monthly payment</div>
         <div class="big" id="loan-result">—</div>
         <div class="sub" id="loan-sub"></div>
+      </div>
+    </div>
+
+    <!-- Compound Interest -->
+    <div class="calc-card">
+      <h2>Compound Interest</h2>
+      <p class="calc-desc">See how your savings or investment grows over time</p>
+      <div class="calc-field">
+        <label>Initial amount ($)</label>
+        <input type="number" id="ci-principal" value="1000" min="0">
+      </div>
+      <div class="calc-row">
+        <div class="calc-field">
+          <label>Monthly contribution ($)</label>
+          <input type="number" id="ci-monthly" value="100" min="0">
+        </div>
+        <div class="calc-field">
+          <label>Annual rate (%)</label>
+          <input type="number" id="ci-rate" value="7" step="0.1">
+        </div>
+      </div>
+      <div class="calc-field">
+        <label>Time horizon (years)</label>
+        <input type="number" id="ci-years" value="10" min="1" max="60">
+      </div>
+      <div class="calc-result">
+        <div class="label">Final balance</div>
+        <div class="big" id="ci-result">—</div>
+        <div class="sub" id="ci-sub"></div>
       </div>
     </div>
 
@@ -189,6 +158,37 @@
         <div class="label">Result</div>
         <div class="big" id="crypto-result">—</div>
         <div class="sub" id="crypto-sub">Loading price…</div>
+      </div>
+    </div>
+
+    <!-- Crypto P&L -->
+    <div class="calc-card">
+      <h2>Crypto Profit / Loss</h2>
+      <p class="calc-desc">Calculate P&amp;L on an open position</p>
+      <div class="calc-row">
+        <div class="calc-field">
+          <label>Entry price ($)</label>
+          <input type="number" id="pnl-entry" value="60000" min="0">
+        </div>
+        <div class="calc-field">
+          <label>Current price ($)</label>
+          <input type="number" id="pnl-current" value="65000" min="0">
+        </div>
+      </div>
+      <div class="calc-row">
+        <div class="calc-field">
+          <label>Investment amount ($)</label>
+          <input type="number" id="pnl-amount" value="1000" min="0">
+        </div>
+        <div class="calc-field">
+          <label>Leverage</label>
+          <input type="number" id="pnl-leverage" value="1" min="1" max="125">
+        </div>
+      </div>
+      <div class="calc-result">
+        <div class="label">Profit / loss</div>
+        <div class="big" id="pnl-result">—</div>
+        <div class="sub" id="pnl-sub"></div>
       </div>
     </div>
 
